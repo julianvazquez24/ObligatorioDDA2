@@ -11,7 +11,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <Folder Include="MinijuegosAPI\Controllers\" />
+    <Folder Include="docs\" />
+    <Folder Include="MinijuegosAPI\Data\" />
+    <Folder Include="MinijuegosAPI\Models\" />
+    <Folder Include="MinijuegosAPI\Services\" />
   </ItemGroup>
 
 </Project>
