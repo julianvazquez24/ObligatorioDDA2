@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ObligatorioDDA2.Migrations
 {
     /// <inheritdoc />
-    public partial class Inicial : Migration
+    public partial class migracionUno : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,13 +17,13 @@ namespace ObligatorioDDA2.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    tipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    numeros = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    secuencia = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    pregunta = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    codigo_pregunta = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    proposicion = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    codigo_proposicion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    tipo = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    numeros = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    secuencia = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    pregunta = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    codigo_pregunta = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    proposicion = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    codigo_proposicion = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     fechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>

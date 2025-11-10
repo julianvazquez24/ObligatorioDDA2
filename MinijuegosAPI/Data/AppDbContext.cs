@@ -1,9 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ObligatorioDDA2.MinijuegosAPI.Models;
 
-public class AppDbContext : DbContext
+namespace ObligatorioDDA2.MinijuegosAPI.Data
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+    public class AppDbContext : DbContext
+    {
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-    public DbSet<Pregunta> Preguntas { get; set; }
+        // Tablas
+        public DbSet<Pregunta> Preguntas { get; set; }
+
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // PKs (explícitas)
+            modelBuilder.Entity<Pregunta>().HasKey(pregunta => pregunta.Id);
+
+        }
+    }
 }
