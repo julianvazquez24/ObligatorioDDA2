@@ -35,8 +35,8 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
             {
                 tipo = "memoria",
                 secuencia = secuencia,
-                proposicion = proposicionSeleccionada.texto,
-                codigo_proposicion = proposicionSeleccionada.codigo,
+                pregunta = proposicionSeleccionada.texto,
+                codigo_pregunta = proposicionSeleccionada.codigo,
                 respuesta = valorRespuesta.ToString(),
                 fechaCreacion = DateTime.Now
             };

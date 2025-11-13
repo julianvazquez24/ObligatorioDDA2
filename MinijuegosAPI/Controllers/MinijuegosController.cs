@@ -98,8 +98,8 @@ namespace ObligatorioDDA2.MinijuegosAPI.Controllers
                     Id = preguntaGenerada.Id,
                     tipo = preguntaGenerada.tipo,
                     secuencia = preguntaGenerada.secuencia,
-                    codigo_pregunta = preguntaGenerada.codigo_proposicion,
-                    pregunta = preguntaGenerada.proposicion,
+                    codigo_pregunta = preguntaGenerada.codigo_pregunta,
+                    pregunta = preguntaGenerada.pregunta,
                 };
                 return Ok(dto);
             }
