@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <Folder Include="docs\" />
-    <Folder Include="MinijuegosAPI\Services\" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using ObligatorioDDA2.MinijuegosAPI.Data;
+using ObligatorioDDA2.MinijuegosAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<MiniJuegoMatematica>();
+builder.Services.AddScoped<MiniJuegoLogica>();
+builder.Services.AddScoped<MiniJuegoMemoria>();
+
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? "Server=localhost\\SQLEXPRESS;Database=ObligatorioDDA2;Trusted_Connection=True;TrustServerCertificate=True;";

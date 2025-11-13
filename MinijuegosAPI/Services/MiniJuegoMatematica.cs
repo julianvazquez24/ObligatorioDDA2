@@ -1,0 +1,36 @@
+﻿using ObligatorioDDA2.MinijuegosAPI.Models;
+using ObligatorioDDA2.MinijuegosAPI.Data;
+
+namespace ObligatorioDDA2.MinijuegosAPI.Services
+{
+    public class MiniJuegoMatematica : IMiniJuegoServicio
+    {
+        private readonly AppDbContext _context;
+
+        public MiniJuegoMatematica(AppDbContext context)
+        {
+            _context = context;
+        }
+        public Task<Pregunta> GenerarPreguntaServicio()
+        {
+            Random generador = new Random();
+            int a = generador.Next(1, 101);
+            int b = generador.Next(1, 101);
+            int c = generador.Next(1, 101);
+            int suma = a + b + c;
+
+            Pregunta pregunta = new Pregunta
+            {
+                tipo = "matematica",
+                numeros = new int[] { a, b, c },
+                pregunta = $"{a} + {b} + {c} = ?",
+                respuestaMatematica = suma,
+                fechaCreacion = DateTime.Now
+            };
+            _context.Preguntas.Add(pregunta);
+            _context.SaveChanges();
+
+            return Task.FromResult(pregunta);
+        }
+    }
+}
