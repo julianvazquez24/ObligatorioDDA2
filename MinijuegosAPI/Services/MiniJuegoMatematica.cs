@@ -12,7 +12,7 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
         {
             _context = context;
         }
-        public Task<Pregunta> GenerarPreguntaServicio()
+        public Task<PreguntaGeneralDTO> GenerarPreguntaServicio()
         {
             Random generador = new Random();
             int a = generador.Next(1, 101);
@@ -25,26 +25,35 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
                 tipo = "matematica",
                 numeros = new int[] { a, b, c },
                 pregunta = $"{a} + {b} + {c} = ?",
-                respuestaMatematica = suma,
+                respuesta = suma.ToString(),
                 fechaCreacion = DateTime.Now
             };
 
             _context.Preguntas.Add(pregunta);
             _context.SaveChanges();
 
-            return Task.FromResult(pregunta);
+            PreguntaGeneralDTO dtoPregunta = new PreguntaGeneralDTO
+            {
+                Id = pregunta.Id,
+                tipo = pregunta.tipo,
+                pregunta = pregunta.pregunta,
+                numeros = pregunta.numeros,
+                fechaCreacion = pregunta.fechaCreacion
+            };
+
+            return Task.FromResult(dtoPregunta);
         }
 
         public ValidacionRespuestaDTO ValidarRespuesta(int id, string respuesta)
         {
             Pregunta pregunta = _context.Preguntas.Find(id);
 
-            if (respuesta != pregunta.respuestaMatematica.ToString())
+            if (respuesta != pregunta.respuesta)
             {
                 return new ValidacionRespuestaDTO
                 {
                     esCorrecta = false,
-                    respuestaCorrecta = pregunta.respuestaMatematica.ToString(),
+                    respuestaCorrecta = pregunta.respuesta,
                     mensaje = "Respuesta incorrecta.",
                     tipoMiniJuego = "matematica"
 
@@ -55,7 +64,7 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
                 return new ValidacionRespuestaDTO
                 {
                     esCorrecta = true,
-                    respuestaCorrecta = pregunta.respuestaMatematica.ToString(),
+                    respuestaCorrecta = pregunta.respuesta,
                     mensaje = "Respuesta correcta.",
                     tipoMiniJuego = "matematica"
                 };

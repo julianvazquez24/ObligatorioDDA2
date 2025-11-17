@@ -15,7 +15,7 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
             _context = context;
         }
 
-        public Task<Pregunta> GenerarPreguntaServicio()
+        public Task<PreguntaGeneralDTO> GenerarPreguntaServicio()
         {
             Random generador = new Random();
             int[] numeros = new int[3];
@@ -42,15 +42,26 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
             {
                 tipo = "logica",
                 numeros = numeros,
-                proposicion = proposicionSeleccionada.texto,
-                codigo_proposicion = proposicionSeleccionada.codigo,
-                respuesta = valorRespuesta.ToString(),
+                pregunta = proposicionSeleccionada.texto,
+                codigo_pregunta = proposicionSeleccionada.codigo,
+                respuesta = valorRespuesta.ToString().ToUpper(),
                 fechaCreacion = DateTime.Now
             };
 
             _context.Preguntas.Add(pregunta);
             _context.SaveChanges();
-            return Task.FromResult(pregunta);
+
+            PreguntaGeneralDTO dtoPregunta = 
+            new PreguntaConCodigoDTO
+            {
+                Id = pregunta.Id,
+                tipo = pregunta.tipo,
+                numeros = pregunta.numeros,
+                codigo_pregunta = pregunta.codigo_pregunta,
+                pregunta = pregunta.pregunta,
+                fechaCreacion = pregunta.fechaCreacion
+            };
+            return Task.FromResult(dtoPregunta);
 
 
         }
@@ -85,7 +96,7 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
             {
                 throw new ArgumentException("Pregunta no encontrada");
             }
-            if (respuesta == pregunta.respuesta)
+            if (respuesta.ToUpper() == pregunta.respuesta)
             {
                 return new ValidacionRespuestaDTO
                 {

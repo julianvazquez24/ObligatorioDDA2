@@ -51,68 +51,18 @@ namespace ObligatorioDDA2.MinijuegosAPI.Controllers
         }
 
 
-        [HttpGet("pregunta")]
-        public async Task<IActionResult> GetPregunta(string tipo)
+        [HttpPost("pregunta")]
+        public async Task<IActionResult> GenerarPregunta([FromBody] string tipo)
         {
-
-            IMiniJuegoServicio minijuegoPregunta = CrearMinijuegoPregunta(tipo);
-            if (tipo == null)
-            {
-                return BadRequest("El tipo de minijuego es requerido.");
-            }
-            if (minijuegoPregunta == null)
+            IMiniJuegoServicio minijuego = CrearMinijuegoPregunta(tipo);
+            if (minijuego == null)
             {
                 return BadRequest("Tipo de minijuego no válido.");
             }
-            Pregunta preguntaGenerada = await minijuegoPregunta.GenerarPreguntaServicio();
-            if (preguntaGenerada == null)
-            {
-                return BadRequest("No se pudo generar la pregunta.");
-            }
-            else if (tipo.ToUpper() == "MATEMATICA")
-            {
-                PreguntaMatematicaDTO dto = new PreguntaMatematicaDTO
-                {
-                    Id = preguntaGenerada.Id,
-                    tipo = preguntaGenerada.tipo,
-                    pregunta = preguntaGenerada.pregunta,
-                    numeros = preguntaGenerada.numeros,
-                    fechaCreacion = preguntaGenerada.fechaCreacion
-                };
-                return Ok(dto);
-            }
-            else if (tipo.ToUpper() == "LOGICA")
-            {
-                PreguntaLogicaDTO dto = new PreguntaLogicaDTO
-                {
-                    Id = preguntaGenerada.Id,
-                    tipo = preguntaGenerada.tipo,
-                    numeros = preguntaGenerada.numeros,
-                    codigo_proposicion = preguntaGenerada.codigo_proposicion,
-                    proposicion = preguntaGenerada.proposicion,
-                };
-                return Ok(dto);
-            }
-            else if (tipo.ToUpper() == "MEMORIA")
-            {
-                PreguntaMemoriaDTO dto = new PreguntaMemoriaDTO
-                {
-                    Id = preguntaGenerada.Id,
-                    tipo = preguntaGenerada.tipo,
-                    secuencia = preguntaGenerada.secuencia,
-                    codigo_pregunta = preguntaGenerada.codigo_pregunta,
-                    pregunta = preguntaGenerada.pregunta,
-                };
-                return Ok(dto);
-            }
-            else
-            {
-                return BadRequest("Tipo de minijuego no válido.");
-            }
-
-
-
+            PreguntaGeneralDTO preguntaGenerada = await minijuego.GenerarPreguntaServicio();
+            return Ok(preguntaGenerada);
         }
+
 
         [HttpGet("validar")]
         public async Task<IActionResult> ValidarRespuesta(int id, string respuesta)

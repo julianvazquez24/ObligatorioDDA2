@@ -12,7 +12,7 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
             _context = context;
         }
 
-        public Task<Pregunta> GenerarPreguntaServicio()
+        public Task<PreguntaGeneralDTO> GenerarPreguntaServicio()
         {
             Random generador = new Random();
             int[] secuencia = new int[5];
@@ -35,15 +35,25 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
             Pregunta pregunta = new Pregunta
             {
                 tipo = "memoria",
-                secuencia = secuencia,
+                numeros = secuencia,
                 pregunta = proposicionSeleccionada.texto,
                 codigo_pregunta = proposicionSeleccionada.codigo,
-                respuesta = valorRespuesta.ToString(),
+                respuesta = valorRespuesta.ToString().ToUpper(),
                 fechaCreacion = DateTime.Now
             };
             _context.Preguntas.Add(pregunta);
             _context.SaveChanges();
-            return Task.FromResult(pregunta);
+
+            PreguntaGeneralDTO dtoPregunta = new PreguntaConCodigoDTO
+            {
+                Id = pregunta.Id,
+                tipo = pregunta.tipo,
+                numeros = pregunta.numeros,
+                codigo_pregunta = pregunta.codigo_pregunta,
+                pregunta = pregunta.pregunta,
+                fechaCreacion = pregunta.fechaCreacion
+            };
+            return Task.FromResult(dtoPregunta);
 
         }
 
@@ -75,7 +85,7 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
             
             Pregunta pregunta =_context.Preguntas.Find(id);
             
-            if (respuesta != pregunta.respuesta)
+            if (respuesta.ToUpper() != pregunta.respuesta)
             {
                 return new ValidacionRespuestaDTO
                 {

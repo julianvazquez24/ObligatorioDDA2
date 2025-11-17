@@ -5,7 +5,7 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
 {
     public interface IMiniJuegoServicio
     {
-        public Task<Pregunta> GenerarPreguntaServicio();
+        public Task<PreguntaGeneralDTO> GenerarPreguntaServicio();
 
         public ValidacionRespuestaDTO ValidarRespuesta(int id, string respuesta);
 
