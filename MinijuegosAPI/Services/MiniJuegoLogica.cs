@@ -1,6 +1,7 @@
 ﻿using System;
 using ObligatorioDDA2.MinijuegosAPI.Data;
 using ObligatorioDDA2.MinijuegosAPI.Models;
+using ObligatorioDDA2.MinijuegosAPI.Models.DTOs;
 
 
 namespace ObligatorioDDA2.MinijuegosAPI.Services
@@ -46,6 +47,7 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
                 respuesta = valorRespuesta.ToString(),
                 fechaCreacion = DateTime.Now
             };
+
             _context.Preguntas.Add(pregunta);
             _context.SaveChanges();
             return Task.FromResult(pregunta);
@@ -75,5 +77,36 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
                     throw new ArgumentException("Código de proposición no válido");
             }
         }
-    }
+
+        public ValidacionRespuestaDTO ValidarRespuesta(int id, string respuesta)
+        {
+            Pregunta pregunta = _context.Preguntas.Find(id);
+            if (pregunta == null)
+            {
+                throw new ArgumentException("Pregunta no encontrada");
+            }
+            if (respuesta == pregunta.respuesta)
+            {
+                return new ValidacionRespuestaDTO
+                {
+                    esCorrecta = true,
+                    respuestaCorrecta = pregunta.respuesta,
+                    mensaje = "Respuesta correcta",
+                    tipoMiniJuego = "logica"
+                };
+            }
+            else
+            {
+                return new ValidacionRespuestaDTO
+                {
+                    esCorrecta = false,
+                    respuestaCorrecta = pregunta.respuesta,
+                    mensaje = "Respuesta incorrecta",
+                    tipoMiniJuego = "logica"
+
+                };
+            }
+        }
+            
+            }
 }

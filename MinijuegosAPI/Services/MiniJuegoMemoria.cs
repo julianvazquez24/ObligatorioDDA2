@@ -1,5 +1,6 @@
 ﻿using ObligatorioDDA2.MinijuegosAPI.Data;
 using ObligatorioDDA2.MinijuegosAPI.Models;
+using ObligatorioDDA2.MinijuegosAPI.Models.DTOs;
 namespace ObligatorioDDA2.MinijuegosAPI.Services
  
 {
@@ -67,6 +68,34 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
                 default:
                     return false;
             }
+        }
+
+        public ValidacionRespuestaDTO ValidarRespuesta(int id, string respuesta)
+        {
+            
+            Pregunta pregunta =_context.Preguntas.Find(id);
+            
+            if (respuesta != pregunta.respuesta)
+            {
+                return new ValidacionRespuestaDTO
+                {
+                    esCorrecta = false,
+                    respuestaCorrecta = pregunta.respuesta,
+                    mensaje = "Respuesta incorrecta.",
+                    tipoMiniJuego = "memoria"
+                };
+            }
+            else
+            {
+                return new ValidacionRespuestaDTO
+                {
+                    esCorrecta = true,
+                    respuestaCorrecta = pregunta.respuesta,
+                    mensaje = "Respuesta correcta.",
+                    tipoMiniJuego = "memoria"
+                };
+            }
+
         }
     }
 }

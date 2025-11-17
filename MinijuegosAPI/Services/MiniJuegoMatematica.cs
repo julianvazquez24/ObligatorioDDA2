@@ -1,5 +1,6 @@
 ﻿using ObligatorioDDA2.MinijuegosAPI.Models;
 using ObligatorioDDA2.MinijuegosAPI.Data;
+using ObligatorioDDA2.MinijuegosAPI.Models.DTOs;
 
 namespace ObligatorioDDA2.MinijuegosAPI.Services
 {
@@ -27,10 +28,39 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
                 respuestaMatematica = suma,
                 fechaCreacion = DateTime.Now
             };
+
             _context.Preguntas.Add(pregunta);
             _context.SaveChanges();
 
             return Task.FromResult(pregunta);
+        }
+
+        public ValidacionRespuestaDTO ValidarRespuesta(int id, string respuesta)
+        {
+            Pregunta pregunta = _context.Preguntas.Find(id);
+
+            if (respuesta != pregunta.respuestaMatematica.ToString())
+            {
+                return new ValidacionRespuestaDTO
+                {
+                    esCorrecta = false,
+                    respuestaCorrecta = pregunta.respuestaMatematica.ToString(),
+                    mensaje = "Respuesta incorrecta.",
+                    tipoMiniJuego = "matematica"
+
+                };
+            }
+            else
+            {
+                return new ValidacionRespuestaDTO
+                {
+                    esCorrecta = true,
+                    respuestaCorrecta = pregunta.respuestaMatematica.ToString(),
+                    mensaje = "Respuesta correcta.",
+                    tipoMiniJuego = "matematica"
+                };
+            }
+
         }
     }
 }

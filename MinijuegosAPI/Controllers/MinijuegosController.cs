@@ -11,13 +11,15 @@ namespace ObligatorioDDA2.MinijuegosAPI.Controllers
     [ApiController]
     public class MinijuegosController : ControllerBase
     {
+        private readonly AppDbContext _context;
         private readonly MiniJuegoMatematica _minijuegoMatematica;
         private readonly MiniJuegoLogica _minijuegoLogica;
         private readonly MiniJuegoMemoria _minijuegoMemoria;
 
 
-        public MinijuegosController(MiniJuegoMatematica minijuegoMatematica, MiniJuegoLogica minijuegoLogica, MiniJuegoMemoria minijuegoMemoria)
+        public MinijuegosController(AppDbContext context, MiniJuegoMatematica minijuegoMatematica, MiniJuegoLogica minijuegoLogica, MiniJuegoMemoria minijuegoMemoria)
         {
+            _context = context;
             _minijuegoMatematica = minijuegoMatematica;
             _minijuegoLogica = minijuegoLogica;
             _minijuegoMemoria = minijuegoMemoria;
@@ -54,7 +56,7 @@ namespace ObligatorioDDA2.MinijuegosAPI.Controllers
         {
 
             IMiniJuegoServicio minijuegoPregunta = CrearMinijuegoPregunta(tipo);
-            if(tipo == null)
+            if (tipo == null)
             {
                 return BadRequest("El tipo de minijuego es requerido.");
             }
@@ -107,6 +109,42 @@ namespace ObligatorioDDA2.MinijuegosAPI.Controllers
             {
                 return BadRequest("Tipo de minijuego no válido.");
             }
+
+
+
+        }
+
+        [HttpGet("validar")]
+        public async Task<IActionResult> ValidarRespuesta(int id, string respuesta)
+        {
+            Pregunta pregunta = await _context.Preguntas.FindAsync(id);
+            if (pregunta == null)
+            {
+                return NotFound("Pregunta no encontrada.");
+            }
+            if (pregunta.tipo == "matematica")
+            {
+                IMiniJuegoServicio minijuegoMatematica = _minijuegoMatematica;
+                ValidacionRespuestaDTO resultadoValidacion = minijuegoMatematica.ValidarRespuesta(id, respuesta);
+                return Ok(resultadoValidacion);
+            }
+            else if (pregunta.tipo == "logica")
+            {
+                IMiniJuegoServicio minijuegoLogica = _minijuegoLogica;
+                ValidacionRespuestaDTO resultadoValidacion = minijuegoLogica.ValidarRespuesta(id, respuesta);
+                return Ok(resultadoValidacion);
+            }
+            else if (pregunta.tipo == "memoria")
+            {
+                IMiniJuegoServicio minijuegoMemoria = _minijuegoMemoria;
+                ValidacionRespuestaDTO resultadoValidacion = minijuegoMemoria.ValidarRespuesta(id, respuesta);
+                return Ok(resultadoValidacion);
+            }
+            else
+            {
+                return BadRequest("Tipo de minijuego no válido.");
+            }
+
         }
     }
 }
