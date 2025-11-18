@@ -44,7 +44,8 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
 
         public ValidacionRespuestaDTO ValidarRespuesta(int id, string respuesta)
         {
-            Pregunta pregunta = _context.Preguntas.Find(id);
+            Pregunta pregunta = _context.Preguntas.FirstOrDefault(p => p.Id == id);
+
 
             if (respuesta != pregunta.respuesta)
             {

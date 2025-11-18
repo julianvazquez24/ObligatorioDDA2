@@ -101,7 +101,7 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
                 respuestaUpper = "FALSE";
             }
 
-            Pregunta pregunta = _context.Preguntas.Find(id);
+            Pregunta pregunta = _context.Preguntas.FirstOrDefault(p => p.Id == id);
             if (pregunta == null)
             {
                 throw new ArgumentException("Pregunta no encontrada");
