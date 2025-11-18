@@ -12,7 +12,7 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
             _context = context;
         }
 
-        public Task<PreguntaGeneralDTO> GenerarPreguntaServicio()
+        public async Task<PreguntaGeneralDTO> GenerarPreguntaServicio()
         {
             Random generador = new Random();
             int[] secuencia = new int[5];
@@ -42,18 +42,18 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
                 fechaCreacion = DateTime.Now
             };
             _context.Preguntas.Add(pregunta);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            PreguntaGeneralDTO dtoPregunta = new PreguntaConCodigoDTO
+            PreguntaGeneralDTO dtoPregunta = new PreguntaMemoriaDTO
             {
                 Id = pregunta.Id,
                 tipo = pregunta.tipo,
-                numeros = pregunta.numeros,
+                secuencia = pregunta.numeros,
                 codigo_pregunta = pregunta.codigo_pregunta,
                 pregunta = pregunta.pregunta,
                 fechaCreacion = pregunta.fechaCreacion
             };
-            return Task.FromResult(dtoPregunta);
+            return dtoPregunta;
 
         }
 
@@ -82,10 +82,18 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
 
         public ValidacionRespuestaDTO ValidarRespuesta(int id, string respuesta)
         {
-            
+            string respuestaUpper = respuesta.ToUpper();
+            if (respuestaUpper == "SI" || respuestaUpper == "SÍ" )
+            {
+                respuestaUpper = "TRUE";
+            }
+            else if (respuestaUpper == "NO")
+            {
+                respuestaUpper = "FALSE";
+            }
             Pregunta pregunta =_context.Preguntas.Find(id);
             
-            if (respuesta.ToUpper() != pregunta.respuesta)
+            if (respuestaUpper != pregunta.respuesta)
             {
                 return new ValidacionRespuestaDTO
                 {

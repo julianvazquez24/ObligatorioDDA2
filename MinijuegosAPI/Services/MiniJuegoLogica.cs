@@ -15,7 +15,7 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
             _context = context;
         }
 
-        public Task<PreguntaGeneralDTO> GenerarPreguntaServicio()
+        public async Task<PreguntaGeneralDTO> GenerarPreguntaServicio()
         {
             Random generador = new Random();
             int[] numeros = new int[3];
@@ -49,19 +49,19 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
             };
 
             _context.Preguntas.Add(pregunta);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             PreguntaGeneralDTO dtoPregunta = 
-            new PreguntaConCodigoDTO
+            new PreguntaLogicaDTO
             {
                 Id = pregunta.Id,
                 tipo = pregunta.tipo,
                 numeros = pregunta.numeros,
-                codigo_pregunta = pregunta.codigo_pregunta,
-                pregunta = pregunta.pregunta,
+                codigo_proposicion = pregunta.codigo_pregunta,
+                proposicion = pregunta.pregunta,
                 fechaCreacion = pregunta.fechaCreacion
             };
-            return Task.FromResult(dtoPregunta);
+            return dtoPregunta;
 
 
         }
@@ -91,12 +91,22 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
 
         public ValidacionRespuestaDTO ValidarRespuesta(int id, string respuesta)
         {
+            string respuestaUpper = respuesta.ToUpper();
+            if (respuestaUpper == "VERDADERO")
+            {
+                respuestaUpper = "TRUE";
+            }
+            if (respuestaUpper == "FALSO")
+            {
+                respuestaUpper = "FALSE";
+            }
+
             Pregunta pregunta = _context.Preguntas.Find(id);
             if (pregunta == null)
             {
                 throw new ArgumentException("Pregunta no encontrada");
             }
-            if (respuesta.ToUpper() == pregunta.respuesta)
+            if (respuestaUpper == pregunta.respuesta)
             {
                 return new ValidacionRespuestaDTO
                 {

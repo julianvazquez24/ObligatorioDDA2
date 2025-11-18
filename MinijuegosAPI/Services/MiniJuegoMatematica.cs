@@ -12,7 +12,7 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
         {
             _context = context;
         }
-        public Task<PreguntaGeneralDTO> GenerarPreguntaServicio()
+        public async Task<PreguntaGeneralDTO> GenerarPreguntaServicio()
         {
             Random generador = new Random();
             int a = generador.Next(1, 101);
@@ -24,24 +24,22 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
             {
                 tipo = "matematica",
                 numeros = new int[] { a, b, c },
-                pregunta = $"{a} + {b} + {c} = ?",
                 respuesta = suma.ToString(),
                 fechaCreacion = DateTime.Now
             };
 
             _context.Preguntas.Add(pregunta);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            PreguntaGeneralDTO dtoPregunta = new PreguntaGeneralDTO
+            PreguntaGeneralDTO dtoPregunta = new PreguntaMatematicaDTO
             {
                 Id = pregunta.Id,
                 tipo = pregunta.tipo,
-                pregunta = pregunta.pregunta,
                 numeros = pregunta.numeros,
                 fechaCreacion = pregunta.fechaCreacion
             };
 
-            return Task.FromResult(dtoPregunta);
+            return dtoPregunta;
         }
 
         public ValidacionRespuestaDTO ValidarRespuesta(int id, string respuesta)
