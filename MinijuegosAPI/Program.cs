@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<MiniJuegoMatematica>();
 builder.Services.AddScoped<MiniJuegoLogica>();
 builder.Services.AddScoped<MiniJuegoMemoria>();
+builder.Services.AddScoped<IPreguntasRepository, PreguntasRepository>();
 
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")

@@ -1,16 +1,15 @@
 ﻿using ObligatorioDDA2.MinijuegosAPI.Models;
-using ObligatorioDDA2.MinijuegosAPI.Data;
 using ObligatorioDDA2.MinijuegosAPI.Models.DTOs;
 
 namespace ObligatorioDDA2.MinijuegosAPI.Services
 {
     public class MiniJuegoMatematica : IMiniJuegoServicio
     {
-        private readonly AppDbContext _context;
+        private readonly IPreguntasRepository _repositorio;
 
-        public MiniJuegoMatematica(AppDbContext context)
+        public MiniJuegoMatematica(IPreguntasRepository repository)
         {
-            _context = context;
+            _repositorio = repository;
         }
         public async Task<PreguntaGeneralDTO> GenerarPreguntaServicio()
         {
@@ -28,8 +27,7 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
                 fechaCreacion = DateTime.Now
             };
 
-            _context.Preguntas.Add(pregunta);
-            await _context.SaveChangesAsync();
+            await _repositorio.AgregarPregunta(pregunta);
 
             PreguntaGeneralDTO dtoPregunta = new PreguntaMatematicaDTO
             {
@@ -42,9 +40,9 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
             return dtoPregunta;
         }
 
-        public ValidacionRespuestaDTO ValidarRespuesta(int id, string respuesta)
+        public async Task<ValidacionRespuestaDTO> ValidarRespuesta(int id, string respuesta)
         {
-            Pregunta pregunta = _context.Preguntas.FirstOrDefault(p => p.Id == id);
+            Pregunta pregunta =  await _repositorio.TraerPreguntaPorId(id);
 
 
             if (respuesta != pregunta.respuesta)

@@ -1,4 +1,5 @@
-﻿using ObligatorioDDA2.MinijuegosAPI.Data;
+﻿using System.Threading.Tasks;
+using ObligatorioDDA2.MinijuegosAPI.Data;
 using ObligatorioDDA2.MinijuegosAPI.Models;
 using ObligatorioDDA2.MinijuegosAPI.Models.DTOs;
 namespace ObligatorioDDA2.MinijuegosAPI.Services
@@ -6,10 +7,11 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
 {
     public class MiniJuegoMemoria : IMiniJuegoServicio
     {
-        private readonly AppDbContext _context;
-        public MiniJuegoMemoria(AppDbContext context)
+        private readonly IPreguntasRepository _repositorio;
+
+        public MiniJuegoMemoria(IPreguntasRepository repository)
         {
-            _context = context;
+            _repositorio = repository;
         }
 
         public async Task<PreguntaGeneralDTO> GenerarPreguntaServicio()
@@ -41,8 +43,7 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
                 respuesta = valorRespuesta.ToString().ToUpper(),
                 fechaCreacion = DateTime.Now
             };
-            _context.Preguntas.Add(pregunta);
-            await _context.SaveChangesAsync();
+            await _repositorio.AgregarPregunta(pregunta);
 
             PreguntaGeneralDTO dtoPregunta = new PreguntaMemoriaDTO
             {
@@ -80,7 +81,7 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
             }
         }
 
-        public ValidacionRespuestaDTO ValidarRespuesta(int id, string respuesta)
+        public async Task<ValidacionRespuestaDTO> ValidarRespuesta(int id, string respuesta)
         {
             string respuestaUpper = respuesta.ToUpper();
             if (respuestaUpper == "SI" || respuestaUpper == "SÍ" )
@@ -91,8 +92,7 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
             {
                 respuestaUpper = "FALSE";
             }
-            Pregunta pregunta = _context.Preguntas.FirstOrDefault(p => p.Id == id);
-    
+            Pregunta pregunta =await  _repositorio.TraerPreguntaPorId(id);    
             if (respuestaUpper != pregunta.respuesta)
             {
                 return new ValidacionRespuestaDTO

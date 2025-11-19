@@ -11,15 +11,15 @@ namespace ObligatorioDDA2.MinijuegosAPI.Controllers
     [ApiController]
     public class MinijuegosController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IPreguntasRepository _repositorio;
         private readonly MiniJuegoMatematica _minijuegoMatematica;
         private readonly MiniJuegoLogica _minijuegoLogica;
         private readonly MiniJuegoMemoria _minijuegoMemoria;
 
 
-        public MinijuegosController(AppDbContext context, MiniJuegoMatematica minijuegoMatematica, MiniJuegoLogica minijuegoLogica, MiniJuegoMemoria minijuegoMemoria)
+        public MinijuegosController(IPreguntasRepository repository, MiniJuegoMatematica minijuegoMatematica, MiniJuegoLogica minijuegoLogica, MiniJuegoMemoria minijuegoMemoria)
         {
-            _context = context;
+            _repositorio = repository;
             _minijuegoMatematica = minijuegoMatematica;
             _minijuegoLogica = minijuegoLogica;
             _minijuegoMemoria = minijuegoMemoria;
@@ -67,7 +67,7 @@ namespace ObligatorioDDA2.MinijuegosAPI.Controllers
         [HttpGet("validar")]
         public async Task<IActionResult> ValidarRespuesta(int id, string respuesta)
         {
-            Pregunta pregunta = await _context.Preguntas.FindAsync(id);
+            Pregunta pregunta = await _repositorio.TraerPreguntaPorId(id);
             if (pregunta == null)
             {
                 return NotFound("Pregunta no encontrada.");
@@ -75,19 +75,19 @@ namespace ObligatorioDDA2.MinijuegosAPI.Controllers
             if (pregunta.tipo == "matematica")
             {
                 IMiniJuegoServicio minijuegoMatematica = _minijuegoMatematica;
-                ValidacionRespuestaDTO resultadoValidacion = minijuegoMatematica.ValidarRespuesta(id, respuesta);
+                ValidacionRespuestaDTO resultadoValidacion =await  minijuegoMatematica.ValidarRespuesta(id, respuesta);
                 return Ok(resultadoValidacion);
             }
             else if (pregunta.tipo == "logica")
             {
                 IMiniJuegoServicio minijuegoLogica = _minijuegoLogica;
-                ValidacionRespuestaDTO resultadoValidacion = minijuegoLogica.ValidarRespuesta(id, respuesta);
+                ValidacionRespuestaDTO resultadoValidacion = await minijuegoLogica.ValidarRespuesta(id, respuesta);
                 return Ok(resultadoValidacion);
             }
             else if (pregunta.tipo == "memoria")
             {
                 IMiniJuegoServicio minijuegoMemoria = _minijuegoMemoria;
-                ValidacionRespuestaDTO resultadoValidacion = minijuegoMemoria.ValidarRespuesta(id, respuesta);
+                ValidacionRespuestaDTO resultadoValidacion = await minijuegoMemoria.ValidarRespuesta(id, respuesta);
                 return Ok(resultadoValidacion);
             }
             else

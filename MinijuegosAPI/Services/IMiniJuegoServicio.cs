@@ -7,7 +7,7 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
     {
         public Task<PreguntaGeneralDTO> GenerarPreguntaServicio();
 
-        public ValidacionRespuestaDTO ValidarRespuesta(int id, string respuesta);
+        public Task<ValidacionRespuestaDTO> ValidarRespuesta(int id, string respuesta);
 
     }
 }
