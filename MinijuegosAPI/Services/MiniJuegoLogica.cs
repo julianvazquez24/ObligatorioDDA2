@@ -51,15 +51,15 @@ namespace ObligatorioDDA2.MinijuegosAPI.Services
             await _repositorio.AgregarPregunta(pregunta);
 
             PreguntaGeneralDTO dtoPregunta = 
-            new PreguntaLogicaDTO
-            {
-                Id = pregunta.Id,
-                tipo = pregunta.tipo,
-                numeros = pregunta.numeros,
-                codigo_proposicion = pregunta.codigo_pregunta,
-                proposicion = pregunta.pregunta,
-                fechaCreacion = pregunta.fechaCreacion
-            };
+                new PreguntaLogicaDTO
+                {
+                    Id = pregunta.Id,
+                    tipo = pregunta.tipo,
+                    numeros = pregunta.numeros,
+                    codigo_proposicion = pregunta.codigo_pregunta,
+                    proposicion = pregunta.pregunta,
+                    fechaCreacion = pregunta.fechaCreacion
+                };
             return dtoPregunta;
 
 

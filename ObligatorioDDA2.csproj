@@ -20,4 +20,9 @@
     <Folder Include="docs\" />
   </ItemGroup>
 
+	<ItemGroup>
+		<Compile Remove="ObligatorioDDA2.Tests\**\*.cs" />
+	</ItemGroup>
+
+
 </Project>
