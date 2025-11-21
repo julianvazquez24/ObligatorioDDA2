@@ -155,5 +155,129 @@ namespace Obligatorio2.Tests
             var bad = Assert.IsType<BadRequestObjectResult>(resultado);
             Assert.Equal("Tipo de minijuego no válido.", bad.Value);
         }
+
+
+      
+        public async Task MiniJuegoController_GenerarPregunta_CuandoTipoEsMemoria_DevuelveOkConPreguntaMemoria()
+        {
+            Mock<IPreguntasRepository> repomock = new Mock<IPreguntasRepository>();
+
+            MiniJuegoMatematica minijuegoMatematica = new MiniJuegoMatematica(repomock.Object);
+            MiniJuegoLogica minijuegoLogica = new MiniJuegoLogica(repomock.Object);
+            MiniJuegoMemoria minijuegoMemoria = new MiniJuegoMemoria(repomock.Object);
+
+            MinijuegosController controller = new MinijuegosController(
+                repomock.Object,
+                minijuegoMatematica,
+                minijuegoLogica,
+                minijuegoMemoria);
+
+            IActionResult resultado = await controller.GenerarPregunta("MEMORIA");
+
+            OkObjectResult ok = Assert.IsType<OkObjectResult>(resultado);
+            PreguntaMemoriaDTO dto = Assert.IsType<PreguntaMemoriaDTO>(ok.Value);
+
+            Assert.Equal("memoria", dto.tipo);
+            Assert.Equal(5, dto.secuencia.Length);
+        }
+
+       
+        public async Task MiniJuegoController_ValidarRespuesta_LogicaCorrecta_DevuelveOk()
+        {
+            Mock<IPreguntasRepository> repomock = new Mock<IPreguntasRepository>();
+
+            Pregunta pregunta = new Pregunta
+            {
+                Id = 30,
+                tipo = "logica",
+                numeros = new int[] { 1, 2, 3 },
+                respuesta = "TRUE"
+            };
+
+            repomock.Setup(r => r.TraerPreguntaPorId(30))
+                .ReturnsAsync(pregunta);
+
+            MinijuegosController controller = new MinijuegosController(
+                repomock.Object,
+                new MiniJuegoMatematica(repomock.Object),
+                new MiniJuegoLogica(repomock.Object),
+                new MiniJuegoMemoria(repomock.Object));
+
+           
+            IActionResult resultado = await controller.ValidarRespuesta(30, "TRUE");
+
+            OkObjectResult ok = Assert.IsType<OkObjectResult>(resultado);
+            ValidacionRespuestaDTO dto = Assert.IsType<ValidacionRespuestaDTO>(ok.Value);
+
+            Assert.True(dto.esCorrecta);
+            Assert.Equal("logica", dto.tipoMiniJuego);
+        }
+
+        
+        [Fact]
+        public async Task MiniJuegoController_ValidarRespuesta_MemoriaCorrecta_DevuelveOk()
+        {
+            Mock<IPreguntasRepository> repomock = new Mock<IPreguntasRepository>();
+
+            Pregunta pregunta = new Pregunta
+            {
+                Id = 40,
+                tipo = "memoria",
+                numeros = new int[] { 4, 5, 6 },
+                respuesta = "TRUE"
+            };
+
+            repomock.Setup(r => r.TraerPreguntaPorId(40))
+                .ReturnsAsync(pregunta);
+
+            MinijuegosController controller = new MinijuegosController(
+                repomock.Object,
+                new MiniJuegoMatematica(repomock.Object),
+                new MiniJuegoLogica(repomock.Object),
+                new MiniJuegoMemoria(repomock.Object));
+
+          
+            IActionResult resultado = await controller.ValidarRespuesta(40, "TRUE");
+
+            OkObjectResult ok = Assert.IsType<OkObjectResult>(resultado);
+            ValidacionRespuestaDTO dto = Assert.IsType<ValidacionRespuestaDTO>(ok.Value);
+
+            Assert.True(dto.esCorrecta);
+            Assert.Equal("memoria", dto.tipoMiniJuego);
+        }
+
+        [Fact]
+        public async Task MiniJuegoController_ValidarRespuesta_CuandoRespuestaEsIncorrecta_DevuelveOkPeroFalse()
+        {
+            Mock<IPreguntasRepository> repomock = new Mock<IPreguntasRepository>();
+
+            Pregunta pregunta = new Pregunta
+            {
+                Id = 50,
+                tipo = "matematica",
+                numeros = new int[] { 1, 1, 1 },
+                respuesta = "3"
+            };
+
+            repomock.Setup(r => r.TraerPreguntaPorId(50))
+                .ReturnsAsync(pregunta);
+
+            MinijuegosController controller = new MinijuegosController(
+                repomock.Object,
+                new MiniJuegoMatematica(repomock.Object),
+                new MiniJuegoLogica(repomock.Object),
+                new MiniJuegoMemoria(repomock.Object));
+
+            IActionResult resultado = await controller.ValidarRespuesta(50, "999");
+
+            OkObjectResult ok = Assert.IsType<OkObjectResult>(resultado);
+            ValidacionRespuestaDTO dto = Assert.IsType<ValidacionRespuestaDTO>(ok.Value);
+
+            Assert.False(dto.esCorrecta);
+            Assert.Equal("matematica", dto.tipoMiniJuego);
+        }
+
+
     }
 }
+    
