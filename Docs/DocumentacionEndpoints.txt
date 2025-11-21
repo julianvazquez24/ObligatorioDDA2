@@ -1,0 +1,54 @@
+DOCUMENTACIÓN DE ENDPOINTS 
+
+
+1. POST /api/minijuegos/pregunta
+
+Descripción:
+Genera una nueva pregunta para un minijuego según el tipo recibido.
+
+Body (string):
+"matematica" | "logica" | "memoria"
+
+Respuestas:
+200 OK – Devuelve un objeto PreguntaGeneralDTO según el tipo.
+400 BadRequest – Tipo de minijuego no válido.
+
+Ejemplo de Request:
+POST /api/minijuegos/pregunta
+Body:
+"logica"
+
+Ejemplo de Response (Logica):
+{
+  "id": 12,
+  "tipo": "logica",
+  "numeros": [12, 88, 45],
+  "codigo_proposicion": "SUMA_PAR",
+  "proposicion": "La suma de los 3 números es par",
+  "fechaCreacion": "2025-11-21T10:22:33"
+}
+
+2. GET /api/minijuegos/validar?id={id}&respuesta={respuesta}
+
+Descripción:
+Valida la respuesta del usuario para una pregunta previamente generada.
+
+Parámetros:
+id (int): Id de la pregunta.
+respuesta (string): Respuesta del usuario.
+
+Respuestas:
+200 OK – Devuelve ValidacionRespuestaDTO.
+404 NotFound – Pregunta no encontrada.
+400 BadRequest – Tipo de minijuego no válido.
+
+Ejemplo:
+GET /api/minijuegos/validar?id=12&respuesta=TRUE
+
+Ejemplo de Response:
+{
+  "esCorrecta": true,
+  "respuestaCorrecta": "TRUE",
+  "mensaje": "Respuesta correcta",
+  "tipoMiniJuego": "logica"
+}
