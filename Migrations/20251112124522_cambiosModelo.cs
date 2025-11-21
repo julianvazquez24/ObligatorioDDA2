@@ -1,9 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
+using System.Diagnostics.CodeAnalysis;
+
+
 
 #nullable disable
 
 namespace ObligatorioDDA2.Migrations
 {
+    [ExcludeFromCodeCoverage]
     /// <inheritdoc />
     public partial class cambiosModelo : Migration
     {

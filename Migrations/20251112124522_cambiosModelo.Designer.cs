@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ObligatorioDDA2.MinijuegosAPI.Data;
+using System.Diagnostics.CodeAnalysis;
+
 
 #nullable disable
 

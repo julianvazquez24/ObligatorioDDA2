@@ -5,11 +5,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ObligatorioDDA2.MinijuegosAPI.Data;
+using System.Diagnostics.CodeAnalysis;
+
 
 #nullable disable
 
 namespace ObligatorioDDA2.Migrations
 {
+    [ExcludeFromCodeCoverage]
     [DbContext(typeof(AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
     {
