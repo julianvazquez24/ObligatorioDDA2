@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <Folder Include="docs\" />
+    <Folder Include="ObligatorioDDA2.Tests\" />
   </ItemGroup>
 
 	<ItemGroup>
